@@ -11,7 +11,7 @@ setwd("C:/Users/basva/Dropbox (Birch Consultants)/EVER - Birch-UU-UvT/C. Werkdoc
 
 # ----LADEN TABELLEN ----
 # hoofdcategorieën BRC
-BRChoofd <- read.csv2("brc_hoofd.csv", encoding = 'UTF-8') %>%
+BRChoofd <- read.csv2("brc_hoofd.csv", fileEncoding = 'UTF-8') %>%
   select(BRC.Omschrijving.Beroepsgroep.Niv.1, BRC.Omschrijving.Beroepsgroep.Niv.2, BRC.Omschrijving.Beroepsgroep.Niv.3) %>%
   rename("Niveau1" = BRC.Omschrijving.Beroepsgroep.Niv.1, "Niveau2" = BRC.Omschrijving.Beroepsgroep.Niv.2, "Niveau3" = BRC.Omschrijving.Beroepsgroep.Niv.3)
 
@@ -37,7 +37,8 @@ UWV_CBS <- read_xlsx("Gemeente_CBS-UWV.xlsx", sheet = "Gemeenten2021_UWV")
 
 Regio <- UWV_CBS %>% 
   inner_join(Regio, by = c("GM_Code" = "Code_1")) %>%
-  rename(GEMEENTE = Naam_2, COROP = Naam_9, PROVINCIE = Naam_27)
+  rename(GEMEENTE = Naam_2, COROP = Naam_9, PROVINCIE = Naam_27) %>%
+  mutate(PROVINCIE = ifelse(PROVINCIE == "Fryslân", "Friesland", PROVINCIE))
 
 # load vacaturedata 
 Dir <- "Vacaturedata"
@@ -181,7 +182,7 @@ Weer_Wend <- Wend_Regio %>%
          NL_ExChurn = NL_churn - abs(NL_groei),
          Delta_ExChurn = Reg_ExChurn / NL_ExChurn,
          Delta_groei = (1+Reg_groei) / (1+NL_groei)) %>%
-  left_join(Regio, by = "GEMEENTE") %>%
+  left_join(Regio, by = c("GEMEENTE", "COROP", "PROVINCIE"))
   select(-GM_UWV) %>%
   distinct()
 
@@ -200,17 +201,5 @@ write_rds(Data_WW, "Data_WW.rds")
 
 #---- testground voor grafieken ----
 
-fig <- Tijd_Vac %>%
-  filter(PROVINCIE == "Flevoland") %>%
-  group_by(PEILDATUM) %>%
-  summarise(AANTAL = sum(AANTAL)) %>%
-  plot_ly(
-    x = ~PEILDATUM,
-    y = ~AANTAL,
-    type = "scatter",
-    mode = "lines",
-    line = list(color = "#C0411D", width = 3)) %>%
-  layout(xaxis = list(type = "date", ticklabelmode = "period"))
 
-fig
 
