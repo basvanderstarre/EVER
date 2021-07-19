@@ -7,4 +7,4 @@ Primary ambition of the tool is to operationalise bounceback and adaptability fo
 1) labour demand (vacancies)
 2) labour availability (unemployment and/or jobs by industry)
 3) new firm formation and firm termination
-4) 
+4) test
