@@ -11,6 +11,7 @@ library(here)
 #---- Data loading ----
 Data <- read_rds("Data_WW.rds")
 
+
 # Regio <- Data$Regio
 # Tijd_Vac <- Data$Tijd_Vac
 # Niveau1_Totaal <- Data$Niveau1_Totaal
