@@ -5,10 +5,10 @@ account: birch-ever
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4270085
-bundleId: 4716198
+bundleId: 4822062
 url: https://birch-ever.shinyapps.io/EVERdashboard/
-when: 1623700645.279
-lastSyncTime: 1623700645.279
+when: 1626349751.0386
+lastSyncTime: 1626349751.0386
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .RData|BRC-ISCO register mapping.xlsx|brc_hoofd.csv|Gemeente_CBS-UWV.xlsx|README.md|WW data.R|Vacaturedata
+ignoredFiles: .RData|.RDataTmp|BRC-ISCO register mapping.xlsx|brc_hoofd.csv|datasets.RData|Gemeente_CBS-UWV.xlsx|README.md|WW data.R|Vacaturedata

@@ -11,9 +11,9 @@ setwd("C:/Users/basva/Dropbox (Birch Consultants)/EVER - Birch-UU-UvT/C. Werkdoc
 
 # ----LADEN TABELLEN ----
 # hoofdcategorieën BRC
-BRChoofd <- read.csv2("brc_hoofd.csv", fileEncoding = 'UTF-8') %>%
-  select(BRC.Omschrijving.Beroepsgroep.Niv.1, BRC.Omschrijving.Beroepsgroep.Niv.2, BRC.Omschrijving.Beroepsgroep.Niv.3) %>%
-  rename("Niveau1" = BRC.Omschrijving.Beroepsgroep.Niv.1, "Niveau2" = BRC.Omschrijving.Beroepsgroep.Niv.2, "Niveau3" = BRC.Omschrijving.Beroepsgroep.Niv.3)
+BRChoofd <- read_csv2("brc_hoofd.csv") %>%
+  select(2, 4, 6) %>%
+  rename("Niveau1" = `BRC Omschrijving Beroepsgroep Niv 1`, "Niveau2" = `BRC Omschrijving Beroepsgroep Niv 2`, "Niveau3" = `BRC Omschrijving Beroepsgroep Niv 3`)
 
 # Verbinding hoofdcategorieen met beroepscodes UWV
 BRCregister <- read_xlsx("BRC-ISCO register mapping.xlsx", sheet = "BRC2014-ISCO-Register") %>%
@@ -44,7 +44,7 @@ Regio <- UWV_CBS %>%
 Dir <- "Vacaturedata"
 Files <- list.files(path = Dir, pattern = "UWV*", full.names = TRUE)
 
-Bron <- ldply(Files, read.csv2) %>%
+Bron <- ldply(Files, read_csv2) %>%
   filter(REC_TYPE == "Vacature") %>%
   select(PEILDATUM, BEROEP_CD, GEMEENTE, AANTAL) %>%
   mutate(PEILDATUM = as.Date(PEILDATUM, format = "%d-%m-%Y"),
@@ -170,19 +170,16 @@ Niveau1_Totaal <- Niv_Regio %>%
   distinct() %>%
   pivot_longer(cols = `2020 Q1`:`2021 Q1`, names_to = "KWARTAAL", values_to = "AANTAL")
 
-
 #samenvoegen weerbaarheid indicator en wendbaarheid indicator
 Weer_Wend <- Wend_Regio %>%
   left_join(Weer_Regio, by = "GEMEENTE") %>%
   mutate(NL_groei = Weer_NL$NL_groei,
          NL_churn = Wend_NL$NL_churn,
-         Reg_FaChurn = Reg_churn / abs(Reg_groei),
          Reg_ExChurn = Reg_churn - abs(Reg_groei),
-         NL_FaChurn = NL_churn / NL_groei,
          NL_ExChurn = NL_churn - abs(NL_groei),
          Delta_ExChurn = Reg_ExChurn / NL_ExChurn,
          Delta_groei = (1+Reg_groei) / (1+NL_groei)) %>%
-  left_join(Regio, by = c("GEMEENTE", "COROP", "PROVINCIE"))
+  left_join(Regio, by = c("GEMEENTE", "COROP", "PROVINCIE")) %>%
   select(-GM_UWV) %>%
   distinct()
 
@@ -200,6 +197,3 @@ write_rds(Data_WW, "Data_WW.rds")
 
 
 #---- testground voor grafieken ----
-
-
-

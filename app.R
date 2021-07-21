@@ -5,17 +5,29 @@ library(shinydashboard)
 library(readr)
 library(dplyr)
 library(plotly)
+library(here)
 
 
 #---- Data loading ----
 Data <- read_rds("Data_WW.rds")
+
+# Regio <- Data$Regio
+# Tijd_Vac <- Data$Tijd_Vac
+# Niveau1_Totaal <- Data$Niveau1_Totaal
+# Weer_Wend <- Data$Weer_Wend
+# 
+# rm(Data)
+# 
+# save.image("~/datasets.RData")
+
+# load(here('datasets.RData'))
 
 #---- Layout modellen voor Plotly ----
 
 buttons <- c('zoomIn2d', 'zoomOut2d', 'pan2d', 'select2d', 'lasso2d', 'sendDataToCloud', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines')
 
 # Script voor definitie van de UI
-source("WW ui.R")
+source("WW ui.R", local = TRUE)
 
 # Zet UI op met header, sidebar en body
 ui <- dashboardPage(header = header,

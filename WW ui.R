@@ -8,7 +8,6 @@ library(shinydashboard)
 
 header <- dashboardHeader(title = "EVER - v0.1")
 
-
 sidebar <- dashboardSidebar(id = "", sidebarMenu(
   #geeft verschillende tabladen weer
   menuItem("Vacatures",
@@ -29,32 +28,32 @@ body <- dashboardBody(
         font-weight: bold;
         font-size: 14px;
         }
-        
-/*kleur van de header*/      
+
+/*kleur van de header*/
       .skin-blue .main-header .logo {
           background-color: #F89730;
       }
-        
-/*kleur van de header als je er met je muis over hovert*/        
+
+/*kleur van de header als je er met je muis over hovert*/
 .skin-blue .main-header .logo:hover {
           background-color: #F89730;}
-          
-/*kleur van de toggle als je er met je muis over hovert*/            
+
+/*kleur van de toggle als je er met je muis over hovert*/
       .skin-blue .main-header .navbar .sidebar-toggle:hover{
                               background-color: #F89730;
                               }
-      
-      
+
+
 /*kleur van het resterende deel van de header */
       .skin-blue .main-header .navbar {
                               background-color: #F89730;
-      } 
-                              
+      }
+
 /*kleur van de sidebar*/
       .skin-blue .main-sidebar {
                               background-color: #002F49;
       }
-                              
+
 /* kleur van active tab in de sidebar */
                                 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
                                 background-color: #004A6E;
@@ -62,14 +61,14 @@ body <- dashboardBody(
 /* kleur tab bij hover */
                                 .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
                                 background-color: #004A6E;
-                                }          
-          
-          
+                                }
+
+
 /*kleur achtergrond dashboard*/
                                 .content-wrapper, .right-side {
                                 background-color: #EDEDED;
                                 }
-                                
+
 
 
       .box{margin: 5px;}
@@ -95,8 +94,10 @@ body <- dashboardBody(
           padding-left: 5px !important;
           padding-right: 5px !important;
       }')
-  )
+)
 ),
+ 
+
 
 #---- UI Tabbladen ----
 tabItem(
