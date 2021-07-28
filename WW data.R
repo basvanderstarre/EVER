@@ -7,20 +7,29 @@ library(zoo)
 library(plotly)
 library(cbsodataR)
 
-setwd("C:/Users/basva/Dropbox (Birch Consultants)/EVER - Birch-UU-UvT/C. Werkdocumenten/Dashboards/Dashboard - weerbaarheid & wendbaarheid")
+# setwd("C:/Users/basva/Dropbox (Birch Consultants)/EVER - Birch-UU-UvT/C. Werkdocumenten/Dashboards/Dashboard - weerbaarheid & wendbaarheid")
 
 # ----LADEN TABELLEN ----
 # hoofdcategorieën BRC
-BRChoofd <- read_csv2("brc_hoofd.csv") %>%
-  select(2, 4, 6) %>%
-  rename("Niveau1" = `BRC Omschrijving Beroepsgroep Niv 1`, "Niveau2" = `BRC Omschrijving Beroepsgroep Niv 2`, "Niveau3" = `BRC Omschrijving Beroepsgroep Niv 3`)
+BRChoofd <- read_delim("brc_hoofd.csv",
+                       delim = ";") %>%
+  select(`BRC Omschrijving Beroepsgroep Niv 1`,
+         `BRC Omschrijving Beroepsgroep Niv 2`,
+         `BRC Omschrijving Beroepsgroep Niv 3`) %>%
+  rename(Niveau1 = `BRC Omschrijving Beroepsgroep Niv 1`,
+         Niveau2 = `BRC Omschrijving Beroepsgroep Niv 2`,
+         Niveau3 = `BRC Omschrijving Beroepsgroep Niv 3`)
 
 # Verbinding hoofdcategorieen met beroepscodes UWV
-BRCregister <- read_xlsx("BRC-ISCO register mapping.xlsx", sheet = "BRC2014-ISCO-Register") %>%
-  select(BEROEP_CD_UWV, BEROEPNAAM_UWV, BEROEPNAAM_BRC) %>%
+BRCregister <- read_xlsx("BRC-ISCO register mapping.xlsx",
+                         sheet = "BRC2014-ISCO-Register") %>%
+  select(BEROEP_CD_UWV,
+         BEROEPNAAM_UWV,
+         BEROEPNAAM_BRC) %>%
   drop_na(BEROEP_CD_UWV) %>%
-  left_join(BRChoofd, by = c("BEROEPNAAM_BRC" = "Niveau3")) %>%
-  rename("Niveau3" = BEROEPNAAM_BRC)
+  left_join(BRChoofd,
+            by = c("BEROEPNAAM_BRC" = "Niveau3")) %>%
+  rename(Niveau3 = BEROEPNAAM_BRC)
 
 # CBS <- cbs_get_datasets() %>%
 #   filter(grepl("NED|ned", Identifier), grepl("Regio", Title))
@@ -95,6 +104,10 @@ Weer_Regio <- Vacatures %>%
   pivot_wider(names_from = KWARTAAL, values_from = GEM) %>%
   mutate(Reg_groei = (`2021 Q1` - `2020 Q1`)/`2020 Q1`)
 
+#outlers verwijderen die onder 25 gemiddelde hebben in GM_tot20
+Weer_Regio_O <- Weer_Regio %>%
+  filter(`2020 Q1` > 25)
+
 # Provincie groei
 Weer_Provincie <- Weer_Regio %>%
   group_by(PROVINCIE) %>%
@@ -144,7 +157,8 @@ Niv_Regio <- Vacatures %>%
   mutate(verschil2021 = abs(`2021 Q1` - `2020 Q1`),
          churn = verschil2021/totaal)
 
-Wend_Regio <- summarise(Niv_Regio, Reg_churn = sum(churn))
+Wend_Regio <- summarise(Niv_Regio, Reg_churn = sum(churn)) %>%
+  filter(!(GEMEENTE %in% setdiff(Weer_Regio, Weer_Regio_O)$GEMEENTE))
 
 Wend_Provincie <- Niv_Regio %>%
   group_by(PROVINCIE, Niveau2) %>%
@@ -172,7 +186,7 @@ Niveau1_Totaal <- Niv_Regio %>%
 
 #samenvoegen weerbaarheid indicator en wendbaarheid indicator
 Weer_Wend <- Wend_Regio %>%
-  left_join(Weer_Regio, by = "GEMEENTE") %>%
+  left_join(Weer_Regio_O, by = "GEMEENTE") %>%
   mutate(NL_groei = Weer_NL$NL_groei,
          NL_churn = Wend_NL$NL_churn,
          Reg_ExChurn = Reg_churn - abs(Reg_groei),

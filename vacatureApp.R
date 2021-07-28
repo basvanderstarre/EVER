@@ -1,0 +1,179 @@
+tegelSelectie <- renderUI({
+  selectInput(inputId = "PROVINCIE",
+              label = NULL,
+              choices = sort(unique(Data$Regio$PROVINCIE)))
+})
+
+  
+WW <- renderPlotly({
+  Weer_Wend <- Data$Weer_Wend %>%
+    mutate(highlight = ifelse(PROVINCIE %in% input$PROVINCIE, "Geselecteerd", "Overig")) %>%
+    plot_ly(x = ~Reg_churn,
+            y = ~Reg_groei,
+            size = ~as.numeric(Inwonertal_52),
+            color = ~highlight,
+            colors = c("#F89730", "#FCEAD6"),
+            type = "scatter",
+            mode = "markers",
+            hoverinfo = "x+y+text",
+            text = ~GEMEENTE,
+            fill = ~'') %>%
+    # add_markers() %>%
+    add_segments(x = min(Data$Weer_Wend$Reg_churn) - 0.05,
+                 xend = max(Data$Weer_Wend$Reg_churn) + 0.05,
+                 y = mean(Data$Weer_Wend$NL_groei),
+                 yend = mean(Data$Weer_Wend$NL_groei),
+                 line = list(dash = "dot",
+                             color = "#A6A6A6"),
+                 hoverinfo='text',
+                 text = paste("NL gemiddelde weerbaarheid:", Weer_Wend$NL_groei)) %>%
+    add_segments(x = mean(Data$Weer_Wend$NL_churn),
+                 xend = mean(Data$Weer_Wend$NL_churn),
+                 y = min(Data$Weer_Wend$Reg_groei) - 0.05 ,
+                 yend = max(Data$Weer_Wend$Reg_groei) + 0.05,
+                 line = list(dash = "dot",
+                             color = "#A6A6A6"),
+                 hoverinfo='text',
+                 text = paste("NL gemiddelde wendbaarheid:", Weer_Wend$NL_groei)) %>%
+    layout(showlegend = FALSE,
+           separators = ',.',
+           xaxis = list(title = "Wendbaarheid", zeroline = FALSE),
+           yaxis = list(title = "Weerbaarheid", zeroline = FALSE)) %>%
+    config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
+
+})
+
+
+
+tegelWWinfo <- renderText({
+  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+})
+
+tegelWWtable <- renderDataTable({
+  
+  tableWW <- Data$Weer_Wend %>%
+    mutate(highlight = ifelse(PROVINCIE %in% input$PROVINCIE, "Geselecteerd", "Overig")) %>%
+    filter(highlight == "Geselecteerd") %>%
+    select(GEMEENTE, Reg_churn, Reg_groei, Inwonertal_52)
+  
+  datatable(tableWW, extensions = "Buttons", options=list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel'), columnDefs = list(list(className = 'dt-center', targets = '_all'))),
+            colnames = c(
+              "Gemeente" = "GEMEENTE",
+              "Wendbaarheid" = "Reg_churn",
+              "Weerbaarheid" = "Reg_groei",
+              "Inwoners" = "Inwonertal_52")
+  )
+  # ) %>%
+  #   formatRound(c(3:4),2)
+})
+
+
+
+
+TV <- renderPlotly({
+  Data$Tijd_Vac %>%
+    filter(PROVINCIE %in% input$PROVINCIE) %>%
+    group_by(PEILDATUM) %>%
+    summarise(AANTAL = sum(AANTAL), .groups = 'drop') %>%
+    plot_ly(x = ~PEILDATUM,
+            y = ~AANTAL,
+            type = "scatter",
+            mode = "lines",
+            line = list(color = "#C0411D", width = 3)) %>%
+    layout(separators = ',.',
+           xaxis = list(title = "", type = "date", ticklabelmode = "period"),
+           yaxis = list(title = "Aantal vacatures", separatethousands = TRUE)) %>%
+    config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
+})
+
+
+
+tegelTVinfo <- renderText({
+  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+})
+
+
+
+tegelTVtable <- renderDataTable({
+  
+  tableTV <- Data$Tijd_Vac %>%
+    filter(PROVINCIE == input$PROVINCIE) %>%
+    group_by(PEILDATUM) %>%
+    summarise(AANTAL = sum(AANTAL))
+  
+  datatable(tableTV, extensions = "Buttons", options=list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel'), columnDefs = list(list(className = 'dt-center', targets = '_all'))),
+            colnames = c(
+              "Peildatum" = "PEILDATUM",
+              # "Gemeente" = "GEMEENTENAAM_CBS",
+              # "Gemiddelde afstand tot basisschool (km)" = "Gem_Afstand",
+              "Aantal" = "AANTAL")
+  )
+  # ) %>%
+  #   formatRound(c(3:4),2)
+})
+
+
+
+
+
+
+BG <- renderPlotly({
+  Data$Niveau1_Totaal %>%
+    filter(PROVINCIE %in% input$PROVINCIE, Niveau1 != "Overig") %>%
+    group_by(KWARTAAL, Niveau1) %>%
+    summarise(AANTAL = round(sum(AANTAL), digits = 0), .groups = 'drop') %>%
+    plot_ly(x = ~Niveau1,
+            y = ~AANTAL,
+            color = ~KWARTAAL,
+            colors = c("#6ECEFF", "#006293"),
+            name = ~KWARTAAL,
+            type = "bar") %>%
+    layout(barmode = "group",
+           separators = ',.',
+           legend = list(orientation = "h", title = "Kwartaal", x = 0.1, y = 100),
+           xaxis = list(type = "category", title = ""),
+           yaxis = list(title = "Aantal vacatures", separatethousands = TRUE, rangemode = "tozero")) %>%
+    config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
+})
+
+
+
+tegelBGinfo <- renderText({
+  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+})
+
+
+
+
+tegelBGtable <- renderDataTable({
+    
+  tableBG <- Data$Niveau1_Totaal %>%
+    filter(PROVINCIE == input$PROVINCIE, Niveau1 != "Overig") %>%
+    group_by(Niveau1, KWARTAAL) %>%
+    summarise(AANTAL = round(sum(AANTAL), digits = 0)) %>%
+    pivot_wider(names_from = KWARTAAL, values_from = AANTAL)
+  
+  datatable(tableBG, extensions = "Buttons", options=list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel'), columnDefs = list(list(className = 'dt-center', targets = '_all'))),
+            colnames = c(
+              # "Soort PO" = "SOORT_PO",
+              "Beroepsgroep" = "Niveau1"
+              # "Gemiddelde afstand tot basisschool (km)" = "Gem_Afstand",
+              #   "Gemiddelde afstand tot basisschool in Nederland (km)" = "Nederland")
+            )
+  ) 
+  # %>%
+  #   formatRound(c(3:4),2)
+})
+
+
+
+
