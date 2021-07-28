@@ -26,7 +26,7 @@ WW <- renderPlotly({
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
                  hoverinfo='text',
-                 text = paste("NL gemiddelde weerbaarheid:", Weer_Wend$NL_groei)) %>%
+                 text = paste("NL gemiddelde weerbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
     add_segments(x = mean(Data$Weer_Wend$NL_churn),
                  xend = mean(Data$Weer_Wend$NL_churn),
                  y = min(Data$Weer_Wend$Reg_groei) - 0.05 ,
@@ -34,7 +34,7 @@ WW <- renderPlotly({
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
                  hoverinfo='text',
-                 text = paste("NL gemiddelde wendbaarheid:", Weer_Wend$NL_groei)) %>%
+                 text = paste("NL gemiddelde wendbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
     layout(showlegend = FALSE,
            separators = ',.',
            xaxis = list(title = "Wendbaarheid", zeroline = FALSE),
