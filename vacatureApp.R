@@ -19,26 +19,52 @@ WW <- renderPlotly({
             text = ~GEMEENTE,
             fill = ~'') %>%
     # add_markers() %>%
-    add_segments(x = min(Data$Weer_Wend$Reg_churn) - 0.05,
-                 xend = max(Data$Weer_Wend$Reg_churn) + 0.05,
+    add_segments(x = min(Data$Weer_Wend$Reg_churn) - 0.025,
+                 xend = max(Data$Weer_Wend$Reg_churn) + 0.025,
                  y = mean(Data$Weer_Wend$NL_groei),
                  yend = mean(Data$Weer_Wend$NL_groei),
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
-                 hoverinfo='text',
+                 hoverinfo='skip',
                  text = paste("NL gemiddelde weerbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
     add_segments(x = mean(Data$Weer_Wend$NL_churn),
                  xend = mean(Data$Weer_Wend$NL_churn),
-                 y = min(Data$Weer_Wend$Reg_groei) - 0.05 ,
-                 yend = max(Data$Weer_Wend$Reg_groei) + 0.05,
+                 y = min(Data$Weer_Wend$Reg_groei) - 0.025 ,
+                 yend = max(Data$Weer_Wend$Reg_groei) + 0.025,
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
-                 hoverinfo='text',
+                 hoverinfo='skip',
                  text = paste("NL gemiddelde wendbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
+    add_annotations(x = 0.9,
+                    y = mean(Data$Weer_Wend$NL_groei),
+                    text = paste('Weerbaarheid in heel Nederland:',round(Data$Weer_Wend$NL_groei[1], 4) ),
+                    showarrow = FALSE,
+                    # arrowhead = 6,
+                    xref = "x",
+                    yref = "y",
+                    arrowsize = 0.7,
+                    ax = 13,
+                    ay = 40,
+                    xanchor = "left",
+                    yanchor = "bottom"
+                    ) %>%
+    add_annotations(x = mean(Data$Weer_Wend$NL_churn),
+                    y = 0.7,
+                    text = paste('Wenbaarheid in heel Nederland:', round(Data$Weer_Wend$NL_churn[1], 4) ),
+                    showarrow = FALSE,
+                    # arrowhead = 6,
+                    xref = "x",
+                    yref = "y",
+                    arrowsize = 0.7,
+                    ax = 13,
+                    ay = 0,
+                    xanchor = "left",
+                    yanchor = "middle") %>%
     layout(showlegend = FALSE,
            separators = ',.',
            xaxis = list(title = "Wendbaarheid", zeroline = FALSE),
-           yaxis = list(title = "Weerbaarheid", zeroline = FALSE)) %>%
+           yaxis = list(title = "Weerbaarheid", zeroline = FALSE)
+    ) %>%
     config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
 
 })
