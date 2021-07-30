@@ -2,6 +2,7 @@ library(shiny)
 library(shinyjs)
 library(shinydashboard)
 
+library(scales)
 library(readr)
 library(dplyr)
 library(plotly)
@@ -12,7 +13,6 @@ library(DT)
 
 #---- Data loading ----
 Data <- read_rds("Data_WW.rds")
-
 
 # Regio <- Data$Regio
 # Tijd_Vac <- Data$Tijd_Vac

@@ -5,6 +5,6 @@ Ambition of the project is to map regions by their economic resilience and inves
 
 Primary ambition of the tool is to operationalise bounceback and adaptability for several economic output indicators including:
 1) labour demand (vacancies)
-2) labour availability (unemployment and/or jobs by industry)
-3) new firm formation and firm termination
-4) 
+2) to be released: labour availability (unemployment and/or jobs by industry)
+3) to be released: new firm formation and firm termination
+4) to be released: regional ecosystem strength

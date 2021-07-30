@@ -9,7 +9,7 @@ source("vacatureUI.R", local = TRUE)
 source("css.R", local = TRUE)
 #---- UI Algemeen ----
 
-header <- dashboardHeader(title = "EVER - v0.1")
+header <- dashboardHeader(title = "EVER - v0.2")
 
 sidebar <- dashboardSidebar(id = "", sidebarMenu(
   menuItem("Info",

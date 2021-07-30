@@ -8,36 +8,36 @@ tegelSelectie <- renderUI({
 WW <- renderPlotly({
   Weer_Wend <- Data$Weer_Wend %>%
     mutate(highlight = ifelse(PROVINCIE %in% input$PROVINCIE, "Geselecteerd", "Overig")) %>%
-    plot_ly(x = ~Reg_churn,
+    plot_ly(x = ~Reg_ExChurn,
             y = ~Reg_groei,
             size = ~as.numeric(Inwonertal_52),
             color = ~highlight,
-            colors = c("#F89730", "#FCEAD6"),
+            colors = c("#8F4C05", "#FCD5AC"),
             type = "scatter",
             mode = "markers",
             hoverinfo = "x+y+text",
             text = ~GEMEENTE,
             fill = ~'') %>%
     # add_markers() %>%
-    add_segments(x = min(Data$Weer_Wend$Reg_churn) - 0.025,
-                 xend = max(Data$Weer_Wend$Reg_churn) + 0.025,
+    add_segments(x = 0,
+                 xend = max(Data$Weer_Wend$Reg_ExChurn) + 0.025,
                  y = mean(Data$Weer_Wend$NL_groei),
                  yend = mean(Data$Weer_Wend$NL_groei),
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
                  hoverinfo='skip',
                  text = paste("NL gemiddelde weerbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
-    add_segments(x = mean(Data$Weer_Wend$NL_churn),
-                 xend = mean(Data$Weer_Wend$NL_churn),
-                 y = min(Data$Weer_Wend$Reg_groei) - 0.025 ,
+    add_segments(x = mean(Data$Weer_Wend$NL_churn)-mean(Data$Weer_Wend$NL_groei),
+                 xend = mean(Data$Weer_Wend$NL_churn)-mean(Data$Weer_Wend$NL_groei),
+                 y = min(Data$Weer_Wend$Reg_groei) - 0.025,
                  yend = max(Data$Weer_Wend$Reg_groei) + 0.025,
                  line = list(dash = "dot",
                              color = "#A6A6A6"),
                  hoverinfo='skip',
                  text = paste("NL gemiddelde wendbaarheid:", Data$Weer_Wend$NL_groei[1])) %>%
-    add_annotations(x = 0.9,
+    add_annotations(x = 0.4,
                     y = mean(Data$Weer_Wend$NL_groei),
-                    text = paste('Weerbaarheid in heel Nederland:',round(Data$Weer_Wend$NL_groei[1], 4) ),
+                    text = paste('Weerbaarheid in heel Nederland:', percent(Data$Weer_Wend$NL_groei[1])),
                     showarrow = FALSE,
                     # arrowhead = 6,
                     xref = "x",
@@ -50,7 +50,7 @@ WW <- renderPlotly({
                     ) %>%
     add_annotations(x = mean(Data$Weer_Wend$NL_churn),
                     y = 0.7,
-                    text = paste('Wenbaarheid in heel Nederland:', round(Data$Weer_Wend$NL_churn[1], 4) ),
+                    text = paste('Wenbaarheid in heel Nederland:', percent(Data$Weer_Wend$NL_churn[1]-Data$Weer_Wend$NL_groei[1])),
                     showarrow = FALSE,
                     # arrowhead = 6,
                     xref = "x",
@@ -62,20 +62,19 @@ WW <- renderPlotly({
                     yanchor = "middle") %>%
     layout(showlegend = FALSE,
            separators = ',.',
-           xaxis = list(title = "Wendbaarheid", zeroline = FALSE),
-           yaxis = list(title = "Weerbaarheid", zeroline = FALSE)
+           xaxis = list(title = "Wendbaarheid: verandering in samenstelling vacatures", zeroline = FALSE, tickformat = "%", rangemode = "tozero"),
+           yaxis = list(title = "Weerbaarheid: verandering in volume vacatures", zeroline = FALSE, tickformat = "%")
     ) %>%
     config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
 
 })
 
-
-
 tegelWWinfo <- renderText({
-  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+  paste("<b>Weerbaarheid</b> meten we door de groei of krimp van gemiddeld aantal openstaande vacatures per kwartaal te meten tussen Q1 2020 en Q1 2021. 
+        Het is uitgedrukt in een procentueel verschil tussen Q1 2021 en Q1 2020.We beperken ons tot gemeenten met gemiddeld meer dan 50 openstaande vacatures in Q1 2020.
+        <br><br>
+        <b>Wendbaarheid</b> meten we door de groei of krimp van alle onderliggende beroepsgroepen te meten, gecorrigeerd voor de groei van het totaal aantal vacatures.
+        De som van deze verschillen geeft aan hoeveel onderlinge verschuiving heeft plaatsgevonden in beroepsgroepen en laat de grootte van verandering in de vraag naar arbeid zien." )
 })
 
 tegelWWtable <- renderDataTable({
@@ -96,9 +95,6 @@ tegelWWtable <- renderDataTable({
   #   formatRound(c(3:4),2)
 })
 
-
-
-
 TV <- renderPlotly({
   Data$Tijd_Vac %>%
     filter(PROVINCIE %in% input$PROVINCIE) %>%
@@ -118,13 +114,8 @@ TV <- renderPlotly({
 
 
 tegelTVinfo <- renderText({
-  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+  paste("Vacaturedata komt van de UWV open match dataset, die per week bijhoudt hoeveel vacatures open staan. Deze grafiek laat het verloop op provincieniveau zien.")
 })
-
-
 
 tegelTVtable <- renderDataTable({
   
@@ -136,18 +127,11 @@ tegelTVtable <- renderDataTable({
   datatable(tableTV, extensions = "Buttons", options=list(scrollX = TRUE, dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel'), columnDefs = list(list(className = 'dt-center', targets = '_all'))),
             colnames = c(
               "Peildatum" = "PEILDATUM",
-              # "Gemeente" = "GEMEENTENAAM_CBS",
-              # "Gemiddelde afstand tot basisschool (km)" = "Gem_Afstand",
               "Aantal" = "AANTAL")
   )
   # ) %>%
   #   formatRound(c(3:4),2)
 })
-
-
-
-
-
 
 BG <- renderPlotly({
   Data$Niveau1_Totaal %>%
@@ -168,17 +152,9 @@ BG <- renderPlotly({
     config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
 })
 
-
-
 tegelBGinfo <- renderText({
-  paste("Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+  paste("Deze grafiek gebruikt het gemiddelde van openstaande vacatures per kwartaal per beroepsgroep om de verschuiving in samenstelling in de provincie te laten zien. Beroepsgroepen is het hoogste niveau van aggregatie bij het UWV. Berekeningen op wendbaarheid zijn op het onderliggende niveau uitgevoerd.")
 })
-
-
-
 
 tegelBGtable <- renderDataTable({
     
@@ -193,7 +169,7 @@ tegelBGtable <- renderDataTable({
               # "Soort PO" = "SOORT_PO",
               "Beroepsgroep" = "Niveau1"
               # "Gemiddelde afstand tot basisschool (km)" = "Gem_Afstand",
-              #   "Gemiddelde afstand tot basisschool in Nederland (km)" = "Nederland")
+              # "Gemiddelde afstand tot basisschool in Nederland (km)" = "Nederland")
             )
   ) 
   # %>%

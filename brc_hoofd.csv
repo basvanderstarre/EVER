@@ -13,12 +13,12 @@
 2;Creatieve en taalkundige beroepen;21;Auteurs en kunstenaars;215;Uitvoerend kunstenaars
 2;Creatieve en taalkundige beroepen;22;Vakspecialisten op artistiek en cultureel gebied;221;Grafisch vormgevers en productontwerpers
 2;Creatieve en taalkundige beroepen;22;Vakspecialisten op artistiek en cultureel gebied;222;Fotografen en interieurontwerpers
-3;CommerciÃ«le beroepen;31;Adviseurs marketing, public relations en sales;311;Adviseurs marketing, public relations en sales
-3;CommerciÃ«le beroepen;32;Vertegenwoordigers en inkopers;321;Vertegenwoordigers en inkopers
-3;CommerciÃ«le beroepen;33;Verkopers;331;Winkeliers en teamleiders detailhandel
-3;CommerciÃ«le beroepen;33;Verkopers;332;Verkoopmedewerkers detailhandel
-3;CommerciÃ«le beroepen;33;Verkopers;333;Kassamedewerkers
-3;CommerciÃ«le beroepen;33;Verkopers;334;Callcentermedewerkers outbound en overige verkopers
+3;Commerciële beroepen;31;Adviseurs marketing, public relations en sales;311;Adviseurs marketing, public relations en sales
+3;Commerciële beroepen;32;Vertegenwoordigers en inkopers;321;Vertegenwoordigers en inkopers
+3;Commerciële beroepen;33;Verkopers;331;Winkeliers en teamleiders detailhandel
+3;Commerciële beroepen;33;Verkopers;332;Verkoopmedewerkers detailhandel
+3;Commerciële beroepen;33;Verkopers;333;Kassamedewerkers
+3;Commerciële beroepen;33;Verkopers;334;Callcentermedewerkers outbound en overige verkopers
 4;Bedrijfseconomische en administratieve beroepen;41;Specialisten bedrijfsbeheer en administratie;411;Accountants
 4;Bedrijfseconomische en administratieve beroepen;41;Specialisten bedrijfsbeheer en administratie;412;Financieel specialisten en economen
 4;Bedrijfseconomische en administratieve beroepen;41;Specialisten bedrijfsbeheer en administratie;413;Bedrijfskundigen en organisatieadviseurs
@@ -43,7 +43,7 @@
 5;Managers;53;Managers productie en gespecialiseerde dienstverlening;536;Managers gespecialiseerde dienstverlening
 5;Managers;54;Managers horeca, detailhandel en overige diensten;541;Managers horeca
 5;Managers;54;Managers horeca, detailhandel en overige diensten;542;Managers detail- en groothandel
-5;Managers;54;Managers horeca, detailhandel en overige diensten;543;Managers commerciÃ«le en persoonlijke dienstverlening
+5;Managers;54;Managers horeca, detailhandel en overige diensten;543;Managers commerciële en persoonlijke dienstverlening
 5;Managers;55;Managers z.n.d.;551;Managers z.n.d.
 6;Openbaar bestuur, veiligheid en juridische beroepen;61;Overheidsambtenaren en -bestuurders;611;Overheidsbestuurders
 6;Openbaar bestuur, veiligheid en juridische beroepen;61;Overheidsambtenaren en -bestuurders;612;Overheidsambtenaren
@@ -101,7 +101,7 @@
 11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1112;Koks
 11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1113;Kelners en barpersoneel
 11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1114;Kappers en schoonheidsspecialisten
-11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1115;ConciÃ«rges en teamleiders schoonmaak
+11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1115;Conciërges en teamleiders schoonmaak
 11;Dienstverlenende beroepen;111;Medewerkers persoonlijke dienstverlening;1116;Verleners van overige persoonlijke diensten
 11;Dienstverlenende beroepen;112;Schoonmakers en keukenhulpen;1121;Schoonmakers
 11;Dienstverlenende beroepen;112;Schoonmakers en keukenhulpen;1122;Keukenhulpen

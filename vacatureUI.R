@@ -13,7 +13,7 @@ vacatureUI <- tabItem(
   ),
   fluidRow(column(width = 6,
     box(
-      title = tags$p("Weerbaarheid en wendbaarheid VRAAG NAAR ARBEID van gemeenten tussen 2020 Q1 en 2021 Q1", style = "font-size: 150%;"),
+      title = tags$p("Weerbaarheid en wendbaarheid vacatures tussen Q1 2020 en Q1 2021", style = "font-size: 150%;"),
       
       plotlyOutput("WW", height = 805),
       # height = "1000px",
@@ -38,7 +38,7 @@ vacatureUI <- tabItem(
     )),
     column(width=6,
            box(
-             title = tags$p("Verandering in vraag naar beroepsgroepen tussen 2020 Q1 en 2021 Q1", style = "font-size: 150%;"),
+             title = tags$p("Verloop aantal openstaande vacatures tussen 2020 Q1 en 2021 Q1", style = "font-size: 150%;"),
              plotlyOutput("TV", height = 315),
              width = NULL,
              actionButton("info_TV", "", icon = icon('info')),
