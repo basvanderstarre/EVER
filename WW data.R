@@ -2,6 +2,7 @@ library(tidyr)
 library(plyr) # volgorde van packages laden is belangrijk! plyr voor dplyr vanwege conflicterende functies
 library(dplyr)
 library(readxl)
+library(writexl)
 library(readr)
 library(zoo)
 library(plotly)
@@ -19,7 +20,14 @@ BRChoofd <- read_csv2("brc_hoofd.csv") %>%
          Niveau2 = `BRC Omschrijving Beroepsgroep Niv 2`,
          Niveau3 = `BRC Omschrijving Beroepsgroep Niv 3`)
 
-# Verbinding hoofdcategorieen met beroepscodes UWV
+# beroepsniveau van hoofdcategorieën BRC op basis van ISCO
+BRCniveau <- read_xlsx("BRC-ISCO niveau mapping.xlsx",
+                       sheet = "ISCO-BRC") %>%
+  mutate(ISCO2008niveau = as.integer(ISCO2008niveau)) %>%
+  group_by(BRC2014beroepsgroep_label) %>%
+  summarise(ISCOniveau = round(median(ISCO2008niveau), digits = 0))
+
+# Verbinding hoofdcategorieen met beroepscodes UWV en beroepsniveau
 BRCregister <- read_xlsx("BRC-ISCO register mapping.xlsx",
                          sheet = "BRC2014-ISCO-Register") %>%
   select(BEROEP_CD_UWV,
@@ -28,6 +36,8 @@ BRCregister <- read_xlsx("BRC-ISCO register mapping.xlsx",
   drop_na(BEROEP_CD_UWV) %>%
   left_join(BRChoofd,
             by = c("BEROEPNAAM_BRC" = "Niveau3")) %>%
+  left_join(BRCniveau,
+            by = c("BEROEPNAAM_BRC" = "BRC2014beroepsgroep_label" )) %>%
   dplyr::rename(Niveau3 = BEROEPNAAM_BRC)
 
 # CBS <- cbs_get_datasets() %>%
@@ -207,5 +217,27 @@ Data_WW <- list(Regio = Regio,
 
 write_rds(Data_WW, "Data_WW.rds")
 
+# ---- write DATASETS ----
+Niv_Gemeente <- Bron %>% 
+  inner_join(Regio, by = "GM_UWV") %>%
+  left_join(BRCregister, by = c("BEROEP_CD" = "BEROEP_CD_UWV")) %>%
+  group_by(KWARTAAL, PEILDATUM, COROP, GEMEENTE, ISCOniveau) %>%
+  summarise(AANTAL = sum(AANTAL)) %>%
+  ungroup() %>%
+  mutate(KWARTAAL = as.character(KWARTAAL)) %>%
+  group_by(KWARTAAL, COROP, GEMEENTE, ISCOniveau) %>%
+  summarise(GEMIDDELD_AANTAL = mean(AANTAL))
+
+Niv_Regio <- Bron %>% 
+  inner_join(Regio, by = "GM_UWV") %>%
+  left_join(BRCregister, by = c("BEROEP_CD" = "BEROEP_CD_UWV")) %>%
+  group_by(KWARTAAL, PEILDATUM, COROP, ISCOniveau) %>%
+  summarise(AANTAL = sum(AANTAL)) %>%
+  ungroup() %>%
+  mutate(KWARTAAL = as.character(KWARTAAL)) %>%
+  group_by(KWARTAAL, COROP, ISCOniveau) %>%
+  summarise(GEMIDDELD_AANTAL = mean(AANTAL))
+
+write_xlsx(Niv_Regio, path = "Niveau_Regio.xlsx")
 
 #---- testground voor grafieken ----

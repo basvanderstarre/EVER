@@ -27,6 +27,7 @@ Data <- read_rds("Data_WW.rds")
 
 #---- Layout modellen voor Plotly ----
 
+# Verbergen van volgende buttons:
 buttons <- c('zoomIn2d', 'zoomOut2d', 'pan2d', 'select2d', 'lasso2d', 'sendDataToCloud', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines')
 
 # Script voor definitie van de UI
@@ -41,25 +42,11 @@ server <- function(input, output) {
   
   # Info tab
   source("infoApp.R", local = TRUE)
-  output$landinginfo <- infoApp
 
   # Vacature Tab
   source("vacatureApp.R", local = TRUE)
-  output$PROVINCIE <- tegelSelectie
   
-  output$WW <- WW
-  output$text_for_WW <- tegelWWinfo
-  output$table_for_WW <- tegelWWtable
-  
-  output$TV <- TV
-  output$text_for_TV <- tegelTVinfo
-  output$table_for_TV <- tegelTVtable
-  
-  output$BG <- BG
-  output$text_for_BG <- tegelBGinfo
-  output$table_for_BG <- tegelBGtable
-  
-}
+ }
 
 # Run the application 
 shinyApp(ui = ui, server = server)

@@ -1,11 +1,11 @@
-tegelSelectie <- renderUI({
+output$Selectie <- renderUI({
   selectInput(inputId = "PROVINCIE",
               label = NULL,
               choices = sort(unique(Data$Regio$PROVINCIE)))
 })
 
   
-WW <- renderPlotly({
+output$WW <- renderPlotly({
   Weer_Wend <- Data$Weer_Wend %>%
     mutate(highlight = ifelse(PROVINCIE %in% input$PROVINCIE, "Geselecteerd", "Overig")) %>%
     plot_ly(x = ~Reg_ExChurn,
@@ -50,7 +50,7 @@ WW <- renderPlotly({
                     ) %>%
     add_annotations(x = mean(Data$Weer_Wend$NL_churn),
                     y = 0.7,
-                    text = paste('Wenbaarheid in heel Nederland:', percent(Data$Weer_Wend$NL_churn[1]-Data$Weer_Wend$NL_groei[1])),
+                    text = paste('Wendbaarheid in heel Nederland:', percent(Data$Weer_Wend$NL_churn[1]-Data$Weer_Wend$NL_groei[1])),
                     showarrow = FALSE,
                     # arrowhead = 6,
                     xref = "x",
@@ -69,7 +69,7 @@ WW <- renderPlotly({
 
 })
 
-tegelWWinfo <- renderText({
+output$text_for_WW <- renderText({
   paste("<b>Weerbaarheid</b> meten we door de groei of krimp van gemiddeld aantal openstaande vacatures per kwartaal te meten tussen Q1 2020 en Q1 2021. 
         Het is uitgedrukt in een procentueel verschil tussen Q1 2021 en Q1 2020.We beperken ons tot gemeenten met gemiddeld meer dan 50 openstaande vacatures in Q1 2020.
         <br><br>
@@ -77,7 +77,7 @@ tegelWWinfo <- renderText({
         De som van deze verschillen geeft aan hoeveel onderlinge verschuiving heeft plaatsgevonden in beroepsgroepen en laat de grootte van verandering in de vraag naar arbeid zien." )
 })
 
-tegelWWtable <- renderDataTable({
+output$table_for_WW <- renderDataTable({
   
   tableWW <- Data$Weer_Wend %>%
     mutate(highlight = ifelse(PROVINCIE %in% input$PROVINCIE, "Geselecteerd", "Overig")) %>%
@@ -95,7 +95,7 @@ tegelWWtable <- renderDataTable({
   #   formatRound(c(3:4),2)
 })
 
-TV <- renderPlotly({
+output$TV <- renderPlotly({
   Data$Tijd_Vac %>%
     filter(PROVINCIE %in% input$PROVINCIE) %>%
     group_by(PEILDATUM) %>%
@@ -111,13 +111,11 @@ TV <- renderPlotly({
     config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
 })
 
-
-
-tegelTVinfo <- renderText({
+output$text_for_TV <- renderText({
   paste("Vacaturedata komt van de UWV open match dataset, die per week bijhoudt hoeveel vacatures open staan. Deze grafiek laat het verloop op provincieniveau zien.")
 })
 
-tegelTVtable <- renderDataTable({
+output$table_for_TV <- renderDataTable({
   
   tableTV <- Data$Tijd_Vac %>%
     filter(PROVINCIE == input$PROVINCIE) %>%
@@ -133,7 +131,7 @@ tegelTVtable <- renderDataTable({
   #   formatRound(c(3:4),2)
 })
 
-BG <- renderPlotly({
+output$BG <- renderPlotly({
   Data$Niveau1_Totaal %>%
     filter(PROVINCIE %in% input$PROVINCIE, Niveau1 != "Overig") %>%
     group_by(KWARTAAL, Niveau1) %>%
@@ -152,11 +150,11 @@ BG <- renderPlotly({
     config(displaylogo = FALSE, modeBarButtonsToRemove = buttons)
 })
 
-tegelBGinfo <- renderText({
+output$text_for_BG <- renderText({
   paste("Deze grafiek gebruikt het gemiddelde van openstaande vacatures per kwartaal per beroepsgroep om de verschuiving in samenstelling in de provincie te laten zien. Beroepsgroepen is het hoogste niveau van aggregatie bij het UWV. Berekeningen op wendbaarheid zijn op het onderliggende niveau uitgevoerd.")
 })
 
-tegelBGtable <- renderDataTable({
+output$table_for_BG <- renderDataTable({
     
   tableBG <- Data$Niveau1_Totaal %>%
     filter(PROVINCIE == input$PROVINCIE, Niveau1 != "Overig") %>%

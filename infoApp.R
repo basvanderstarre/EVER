@@ -1,4 +1,4 @@
-infoApp <- renderText({
+output$landinginfo <- renderText({
   paste("<h2><b>EVER dashboard</b></h2><br>
   
         Het dashboard voor het ZonMW project <b>Economische Veerkracht van Regio's</b> heeft de ambitie Nederlandse regio's in kaart te brengen in termen van economische weerbaarheid en wendbaarheid.

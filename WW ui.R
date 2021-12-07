@@ -7,6 +7,7 @@ library(shinydashboard)
 source("infoUI.R", local = TRUE)
 source("vacatureUI.R", local = TRUE)
 source("css.R", local = TRUE)
+
 #---- UI Algemeen ----
 
 header <- dashboardHeader(title = "EVER - v0.2")

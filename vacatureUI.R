@@ -7,7 +7,7 @@ vacatureUI <- tabItem(
     box(
       # title = "Selectie",
       title = tags$p("Kies een provincie", style = "font-size: 150%;"),
-      uiOutput("PROVINCIE"),
+      uiOutput("Selectie"),
       width = 12,
     )
   ),
